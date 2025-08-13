@@ -29,6 +29,7 @@ npm run dev
 After this, open `http://localhost:5173` in your browser.
 
 Or if you prefer to deploy it to Vercel:
+
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fweareblahs%2Fwiki)
 
 # License?
