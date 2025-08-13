@@ -3,24 +3,28 @@ import parse from "html-react-parser";
 export const Result = ({ res, perc, article, setAnsDisp }) => {
   return (
     <>
-      <div className="fc absolute top-0 left-0 bg-black/30">
-        <div className="bg-white w-[90vw] h-[90vh] rounded-2xl block">
-          <h1 className="text-6xl mt-8 mb-4">
+      <div className="fc absolute top-0 left-0">
+        <div className="bg-white w-[100%] h-[100%] rounded-2xl block">
+          <h1 className="text-4xl lg:text-6xl mt-8 mb-4">
             {res == "correct" ? (
               <span className="text-green-600">Correct</span>
             ) : (
               <span className="text-red-500">Incorrect</span>
             )}
           </h1>
-          <h3 className="text-xl">Answer accuracy: {perc.toFixed(2) * 100}%</h3>
+          <h3 className="text-sm lg:text-xl">
+            Answer accuracy: {(perc * 100).toFixed(2)}%
+          </h3>
           <div className="text-start px-6 mt-6 mb-6">
             <img
               src={article.image}
               alt=""
-              className="h-60 w-[100%] object-cover rounded-t-2xl"
+              className="h-60 lg:h-80 w-[100%] object-cover rounded-t-2xl"
             />
-            <h1 className="text-3xl article-font mt-3">{article.ans_full}</h1>
-            <span className="text-base py-3 line-clamp-5">
+            <h1 className="text-2xl lg:text-3xl article-font mt-3">
+              {article.ans_full}
+            </h1>
+            <span className="text-base py-3 line-clamp-5 overflow-scroll">
               {parse(article.fs)}
             </span>
             <center className="mt-5">

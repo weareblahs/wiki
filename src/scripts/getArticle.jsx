@@ -21,7 +21,6 @@ export const getArticle = async () => {
   const res = await ky
     .get("https://en.wikipedia.org/api/rest_v1/page/random/summary")
     .json();
-  console.log(res);
   return {
     thumbnail: res.thumbnail ? res.thumbnail.source : null,
     ans: res.title.split("(")[0].trim(),

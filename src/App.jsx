@@ -2,30 +2,52 @@ import { useEffect, useState } from "react";
 import "./App.css";
 import { getArticle, similarity } from "./scripts/getArticle";
 import { Result } from "./pages/Result";
-
 function App() {
   const [count, setCount] = useState(0);
   const [article, setArticle] = useState({});
-  const [cn, setcn] = useState("max-h-[500px] max-w-[500px] blur-sm");
+  const [cn, setcn] = useState(
+    "object-contain h-75 w-75 lg:max-h-[500px] lg:max-w-[500px] blur-sm"
+  );
   const [ans, setAns] = useState("");
   const [res, setResult] = useState({});
   const [ansDisp, setAnsDisp] = useState(false);
-  useEffect(() => {
-    async function get() {
-      const res = await getArticle();
-      setArticle(res);
-    }
-    get();
-  }, []);
+  const [correct, setCorrect] = useState(0);
+  const [incorrect, setIncorrect] = useState(0);
 
+  useEffect(() => {
+    if (localStorage.getItem("wikiguess_correct")) {
+      setCorrect(localStorage.getItem("wikiguess_correct"));
+    } else {
+      localStorage.setItem("wikiguess_correct", 0);
+    }
+
+    if (localStorage.getItem("wikiguess_incorrect")) {
+      setIncorrect(localStorage.getItem("wikiguess_incorrect"));
+    } else {
+      localStorage.setItem("wikiguess_incorrect", 0);
+    }
+  }, []);
   const checkAnswer = (ans) => {
     const sim = similarity(ans.toLowerCase(), article.ans.toLowerCase());
-    if (sim > 0.5001) {
-      setResult({ result: "correct", score: sim });
+    const sim_case_2 = similarity(
+      ans.toLowerCase(),
+      article.ans_full.toLowerCase()
+    );
+    if (sim > 0.5001 || sim_case_2 > 0.5001) {
+      localStorage.setItem("wikiguess_correct", parseInt(correct) + 1);
+      setCorrect(localStorage.getItem("wikiguess_correct"));
+      setResult({
+        result: "correct",
+        score: sim_case_2 > sim ? sim_case_2 : sim,
+      });
     } else {
-      setResult({ result: "incorrect", score: sim });
+      localStorage.setItem("wikiguess_incorrect", parseInt(incorrect) + 1);
+      setIncorrect(localStorage.getItem("wikiguess_incorrect"));
+      setResult({
+        result: "incorrect",
+        score: sim_case_2 > sim ? sim_case_2 : sim,
+      });
     }
-    console.log(res);
     setAnsDisp(true);
   };
 
@@ -38,7 +60,7 @@ function App() {
     setAns("");
     get();
 
-    setcn("max-h-[500px] max-w-[500px] blur-sm");
+    setcn("object-contain h-75 w-75 lg:max-h-[500px] lg:max-w-[500px] blur-sm");
   };
   useEffect(() => {
     if (!ansDisp) {
@@ -46,11 +68,8 @@ function App() {
     }
   }, [ansDisp]);
 
-  useEffect(() => {
-    console.log(JSON.stringify(article));
-  }, [article]);
   return (
-    <div className="">
+    <div className="overflow-x-hidden lg:overflow-hidden">
       {article.length != 0 ? (
         <>
           <i className="top">
@@ -59,7 +78,7 @@ function App() {
                 {" "}
                 <img src={article.image} alt="" srcset="" className={cn} />
               </center>
-              <div className="w-[75%] ms-auto me-auto mt-5 text-3xl article-font">
+              <div className="w-[95%] ms-auto me-auto mt-5 text-xl lg:text-3xl article-font line-clamp-5 overflow-scroll lg:overflow-hidden">
                 <center>"...{article.sentence}...."</center>
               </div>
             </div>
@@ -67,41 +86,49 @@ function App() {
           <center>
             <div className="bottom">
               <div className="cols col-span-12">
-                <div className="block">(Counter coming soon)</div>
+                <div className="block text-2xl">
+                  ✔️: {correct} ❌: {incorrect}
+                </div>
                 <div className="block">
                   <input
                     type="text"
-                    className="text-2xl border-2 px-4 py-2 rounded-lg"
+                    className="text-2xl border-2 px-4 py-2 rounded-lg max-w-[85%]"
                     value={ans}
                     onChange={(e) => setAns(e.target.value)}
                     placeholder="Answer?"
                   />
                 </div>
-                <div className="flex">
-                  <button
-                    onClick={() =>
-                      setcn("max-h-[500px] max-w-[500px] transition")
-                    }
-                    className="bg-blue-500 px-4 py-2 text-white mt-5 rounded-lg"
-                  >
-                    Reveal image
-                  </button>
-
-                  <button
-                    className="bg-blue-500 px-4 py-2 text-white mt-5 ms-12 rounded-lg"
-                    onClick={() => checkAnswer(ans)}
-                  >
-                    Submit answer
-                  </button>
-
-                  <button
-                    onClick={() => refresh()}
-                    className="bg-blue-500 px-4 py-2 text-white mt-5 ms-12 rounded-lg"
-                  >
-                    Change article
-                  </button>
+                <div className="grid grid-cols-1 lg:grid-cols-3">
+                  <div>
+                    <button
+                      onClick={() =>
+                        setcn(
+                          "object-contain h-75 w-75 lg:max-h-[500px] lg:max-w-[500px] transition"
+                        )
+                      }
+                      className="bg-blue-500 px-4 py-2 text-white mt-2 rounded-lg"
+                    >
+                      Reveal image
+                    </button>
+                  </div>
+                  <div>
+                    <button
+                      className="bg-blue-500 px-4 py-2 text-white mt-2 rounded-lg"
+                      onClick={() => checkAnswer(ans)}
+                    >
+                      Submit answer
+                    </button>
+                  </div>
+                  <div>
+                    <button
+                      onClick={() => refresh()}
+                      className="bg-blue-500 px-4 py-2 text-white mt-2 rounded-lg"
+                    >
+                      Change article
+                    </button>
+                  </div>
                 </div>
-                <center>
+                <center className="lg:max-w-[100%] max-w-[80%]">
                   Wikipedia content used under CC BY-SA license. See{" "}
                   <a
                     href="https://en.wikipedia.org/wiki/Wikipedia:Reusing_Wikipedia_content"
