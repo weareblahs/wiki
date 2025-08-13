@@ -15,7 +15,9 @@ The user will be prompted with a random sentence of a random Wikipedia article's
 
 # Where can I see this project?
 
-The project is available live on https://wikiguess.ntyx.dev. If you prefer to run locally, ensure you have Node.js installed, then:
+The project is available live on https://wikiguess.ntyx.dev.
+
+If you prefer to run locally, ensure you have Node.js installed, then:
 
 ```bash
 git clone https://github.com/weareblahs/wiki
@@ -25,6 +27,9 @@ npm run dev
 ```
 
 After this, open `http://localhost:5173` in your browser.
+
+Or if you prefer to deploy it to Vercel:
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fweareblahs%2Fwiki)
 
 # License?
 
