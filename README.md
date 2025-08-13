@@ -9,7 +9,7 @@ The user will be prompted with a random sentence of a random Wikipedia article's
 # How does it work?
 
 - This retrieves a summary of an random article via Wikipedia's API (via the `https://en.wikipedia.org/api/rest_v1/page/random/summary` endpoint), then fetches the extract and selects a random sentence
-- Then, it replaces the correct answer with "..."
+- Then, it replaces the correct answer with "..." in the selected sentence, which will avoid users from guessing it straight from the selected extract
 - After user types in the answer, it compares it with both full and partial answer (since the "answer" string strips off the "()" symbols, full_ans is required if the user types in the full answer (including the "()")) checks the accuracy percentage (see "How to play?" for details)
 - The user will then see the result and whether to view the related Wikipedia article or not
 
